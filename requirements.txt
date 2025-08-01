@@ -1,0 +1,25 @@
+# Windows 11 Update Manager - Requirements
+# 
+# This project uses only Python standard library modules.
+# No external dependencies are required.
+#
+# Standard library modules used:
+# - subprocess (for running system commands)
+# - os (for system operations and admin checks)
+# - winreg (for Windows registry operations)
+# - pathlib (for file path operations)
+#
+# Python Version Requirements:
+# Python >= 3.6
+#
+# System Requirements:
+# - Windows 10/11
+# - Administrator privileges (recommended for full functionality)
+#
+# Note: If you need to install Python, download from:
+# https://www.python.org/downloads/
+#
+# To verify your Python version:
+# python --version
+#
+# No pip install required - all dependencies are built into Python!
