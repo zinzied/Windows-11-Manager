@@ -1,5 +1,9 @@
 # 🛡️ Windows 11 Update Manager - Complete Control Over System Updates
 
+**Created by:** Zied Boughdir
+**GitHub:** [https://github.com/zinzied](https://github.com/zinzied)
+**Year:** 2025
+
 This repository contains Python scripts to stop/disable and restore Windows 11 automatic updates.
 
 ## Introduction: Why Disable Windows Updates?
@@ -195,6 +199,12 @@ After running the disable script, you can verify:
 
 These scripts are provided as-is for educational and administrative purposes. Use at your own risk.
 
+## Author
+
+**Zied Boughdir**
+GitHub: [https://github.com/zinzied](https://github.com/zinzied)
+Year: 2025
+
 ## Disclaimer
 
-Modifying Windows Update settings can impact system security and stability. The authors are not responsible for any issues that may arise from using these scripts. Always ensure you have proper backups and understand the implications before disabling system updates.
+Modifying Windows Update settings can impact system security and stability. The author is not responsible for any issues that may arise from using these scripts. Always ensure you have proper backups and understand the implications before disabling system updates.
