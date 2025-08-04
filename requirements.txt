@@ -1,13 +1,18 @@
 # Windows 11 Update Manager - Requirements
-# 
-# This project uses only Python standard library modules.
-# No external dependencies are required.
+#
+# This project primarily uses Python standard library modules.
+# Optional dependencies for enhanced functionality are listed below.
 #
 # Standard library modules used:
 # - subprocess (for running system commands)
 # - os (for system operations and admin checks)
 # - winreg (for Windows registry operations)
 # - pathlib (for file path operations)
+# - ctypes (for Windows API calls)
+# - platform (for system detection)
+#
+# Optional dependencies (for better color support):
+colorama>=0.4.4
 #
 # Python Version Requirements:
 # Python >= 3.6
@@ -16,10 +21,13 @@
 # - Windows 10/11
 # - Administrator privileges (recommended for full functionality)
 #
+# Installation:
+# pip install -r requirements.txt
+#
 # Note: If you need to install Python, download from:
 # https://www.python.org/downloads/
 #
 # To verify your Python version:
 # python --version
 #
-# No pip install required - all dependencies are built into Python!
+# The application will work without colorama, but colors may not display properly in some terminals.

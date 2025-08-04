@@ -174,11 +174,24 @@ That's it! No complicated setup, no weird dependencies. Just download, run, and 
 
 1. **Download** this repository (green "Code" button → "Download ZIP")
 2. **Extract** all files to a folder (like `C:\WindowsManager\`)
-3. **Right-click Command Prompt** → "Run as administrator"
-4. **Navigate to your folder**: `cd C:\WindowsManager\`
-5. **Run the magic**: `python launcher.py`
-6. **Choose what annoys you most** and let the tool fix it!
-7. **Restart your PC** when prompted (trust me, it's worth the 30 seconds)
+3. **Choose your preferred method to run with admin privileges:**
+
+   **🎯 Method 1: Automatic Admin Request (Easiest)**
+   - Double-click `run_as_admin.bat` OR
+   - Right-click `run_as_admin.ps1` → "Run with PowerShell"
+   - Click "Yes" when Windows asks for admin privileges
+
+   **🎯 Method 2: Manual Admin Setup**
+   - Right-click Command Prompt → "Run as administrator"
+   - Navigate to your folder: `cd C:\WindowsManager\`
+   - Run the launcher: `python launcher.py`
+
+   **🎯 Method 3: Built-in Admin Request**
+   - Run `python launcher.py` normally
+   - The app will detect you're not admin and offer to restart with privileges
+
+4. **Choose what annoys you most** and let the tool fix it!
+5. **Restart your PC** when prompted (trust me, it's worth the 30 seconds)
 
 **That's it!** You're now in control of your own computer again. Feels good, doesn't it? 😊
 

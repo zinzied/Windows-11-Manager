@@ -11,23 +11,73 @@ Year: 2025
 import subprocess
 import sys
 import os
+import ctypes
+import platform
+
+# Try to import colorama for better Windows color support
+try:
+    from colorama import init, Fore, Back, Style
+    COLORAMA_AVAILABLE = True
+    # Initialize colorama
+    init(autoreset=True)
+except ImportError:
+    COLORAMA_AVAILABLE = False
+
+# Enable ANSI color support on Windows
+def enable_ansi_colors():
+    """Enable ANSI color codes on Windows terminals."""
+    if platform.system() == "Windows":
+        try:
+            # Enable ANSI escape sequence processing
+            kernel32 = ctypes.windll.kernel32
+            kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+            return True
+        except Exception:
+            return False
+    return True
 
 # Color codes for terminal output
 class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'  # End color formatting
+    if COLORAMA_AVAILABLE:
+        # Use colorama colors for better Windows support
+        RED = Fore.RED + Style.BRIGHT
+        GREEN = Fore.GREEN + Style.BRIGHT
+        YELLOW = Fore.YELLOW + Style.BRIGHT
+        BLUE = Fore.BLUE + Style.BRIGHT
+        MAGENTA = Fore.MAGENTA + Style.BRIGHT
+        CYAN = Fore.CYAN + Style.BRIGHT
+        WHITE = Fore.WHITE + Style.BRIGHT
+        BOLD = Style.BRIGHT
+        UNDERLINE = ''  # Colorama doesn't have underline
+        END = Style.RESET_ALL
+    else:
+        # Fallback to ANSI codes
+        RED = '\033[91m'
+        GREEN = '\033[92m'
+        YELLOW = '\033[93m'
+        BLUE = '\033[94m'
+        MAGENTA = '\033[95m'
+        CYAN = '\033[96m'
+        WHITE = '\033[97m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+        END = '\033[0m'  # End color formatting
 
 def print_colored(text, color=Colors.WHITE):
     """Print text with color."""
-    print(f"{color}{text}{Colors.END}")
+    if COLORAMA_AVAILABLE:
+        # Colorama handles everything for us
+        print(f"{color}{text}")
+    else:
+        # Try ANSI codes with fallback
+        try:
+            if not hasattr(print_colored, '_ansi_tested'):
+                enable_ansi_colors()
+                print_colored._ansi_tested = True
+            print(f"{color}{text}{Colors.END}")
+        except Exception:
+            # Fallback to plain text
+            print(text)
 
 def print_header():
     """Print the main header."""
@@ -65,7 +115,15 @@ def show_main_menu():
     print_colored("\n📖 HELP & INFO:", Colors.BOLD + Colors.MAGENTA)
     print_colored("8. ℹ️  INFORMATION", Colors.BLUE)
     print_colored("   └─ Learn about Windows system management", Colors.WHITE)
-    print_colored("9. ❌ EXIT", Colors.YELLOW)
+
+    # Show admin option if not running as admin
+    if not check_admin():
+        print_colored("9. 🔑 RESTART AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
+        print_colored("   └─ Restart with elevated privileges", Colors.WHITE)
+        print_colored("0. ❌ EXIT", Colors.YELLOW)
+    else:
+        print_colored("9. ❌ EXIT", Colors.YELLOW)
+
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
 
 def show_information():
@@ -155,22 +213,78 @@ def check_admin():
     except subprocess.CalledProcessError:
         return False
 
+def request_admin():
+    """Request administrator privileges by restarting the script with elevated permissions."""
+    try:
+        if sys.platform == 'win32':
+            # Use ShellExecute to run the script as administrator
+            ctypes.windll.shell32.ShellExecuteW(
+                None,
+                "runas",
+                sys.executable,
+                f'"{os.path.abspath(__file__)}"',
+                None,
+                1
+            )
+            return True
+        else:
+            print_colored("\n❌ Admin privilege request is only supported on Windows.", Colors.RED)
+            return False
+    except Exception as e:
+        print_colored(f"\n❌ Failed to request admin privileges: {e}", Colors.RED)
+        return False
+
 def main():
     """Main launcher function."""
+    # Enable ANSI colors for Windows terminals
+    enable_ansi_colors()
+
     # Check admin status
     is_admin = check_admin()
-    
+
+    # If not running as admin, offer to restart with admin privileges
+    if not is_admin:
+        print_colored("\n⚠️  NOT RUNNING AS ADMINISTRATOR", Colors.BOLD + Colors.YELLOW)
+        print_colored("This application requires administrator privileges for full functionality.", Colors.YELLOW)
+        print_colored("\nOptions:", Colors.CYAN)
+        print_colored("1. 🔑 Restart with Administrator privileges (Recommended)", Colors.GREEN)
+        print_colored("2. 🚫 Continue without Administrator privileges (Limited functionality)", Colors.YELLOW)
+
+        try:
+            admin_choice = input(f"\n{Colors.BOLD}Choose option (1 or 2): {Colors.END}").strip()
+
+            if admin_choice == '1':
+                print_colored("\n🔄 Requesting administrator privileges...", Colors.CYAN)
+                print_colored("Please click 'Yes' in the UAC dialog that appears.", Colors.YELLOW)
+
+                if request_admin():
+                    print_colored("✅ Admin request sent. The application will restart with elevated privileges.", Colors.GREEN)
+                    sys.exit(0)  # Exit current instance
+                else:
+                    print_colored("❌ Failed to request admin privileges. Continuing with limited functionality.", Colors.RED)
+            elif admin_choice == '2':
+                print_colored("\n⚠️  Continuing with limited functionality...", Colors.YELLOW)
+            else:
+                print_colored("\n❌ Invalid choice. Continuing with limited functionality...", Colors.RED)
+
+        except KeyboardInterrupt:
+            print_colored("\n\n👋 Goodbye! Thanks for using Windows 11 Update Manager!", Colors.BOLD + Colors.CYAN)
+            return
+
     while True:
         show_main_menu()
-        
+
         if not is_admin:
             print_colored("\n⚠️  NOT RUNNING AS ADMINISTRATOR", Colors.BOLD + Colors.YELLOW)
-            print_colored("Some features may not work properly. Consider running as Administrator.", Colors.YELLOW)
+            print_colored("Some features may not work properly. You can restart as Administrator anytime.", Colors.YELLOW)
         else:
             print_colored("\n✅ RUNNING AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
         
         try:
-            choice = input(f"\n{Colors.BOLD}Enter your choice (1-9): {Colors.END}").strip()
+            if not is_admin:
+                choice = input(f"\n{Colors.BOLD}Enter your choice (1-9, 0 to exit): {Colors.END}").strip()
+            else:
+                choice = input(f"\n{Colors.BOLD}Enter your choice (1-9): {Colors.END}").strip()
 
             if choice == '1':
                 run_script("disable_windows_updates.py")
@@ -190,11 +304,32 @@ def main():
                 show_information()
                 input(f"\n{Colors.CYAN}Press Enter to return to main menu...{Colors.END}")
             elif choice == '9':
-                print_colored("\n👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
+                if not is_admin:
+                    # Option 9 is "Restart as Administrator" when not admin
+                    print_colored("\n� Requesting administrator privileges...", Colors.CYAN)
+                    print_colored("Please click 'Yes' in the UAC dialog that appears.", Colors.YELLOW)
+
+                    if request_admin():
+                        print_colored("✅ Admin request sent. The application will restart with elevated privileges.", Colors.GREEN)
+                        sys.exit(0)  # Exit current instance
+                    else:
+                        print_colored("❌ Failed to request admin privileges.", Colors.RED)
+                        input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
+                else:
+                    # Option 9 is "Exit" when running as admin
+                    print_colored("\n👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
+                    print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
+                    break
+            elif choice == '0' and not is_admin:
+                # Option 0 is "Exit" when not running as admin
+                print_colored("\n�👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
                 print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
                 break
             else:
-                print_colored("\n❌ Invalid choice! Please enter 1, 2, 3, 4, 5, 6, 7, 8, or 9.", Colors.RED)
+                if not is_admin:
+                    print_colored("\n❌ Invalid choice! Please enter 1-9 or 0.", Colors.RED)
+                else:
+                    print_colored("\n❌ Invalid choice! Please enter 1-9.", Colors.RED)
                 input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
                 
         except KeyboardInterrupt:
