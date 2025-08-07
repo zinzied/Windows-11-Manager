@@ -218,6 +218,27 @@ When you run the tool, you'll see this beautiful menu (yes, I'm proud of it! �
 
 **Pro tip:** Start with option 8 (Information) if you're new to this. I've written detailed explanations of what each tool does!
 
+### 🎨 Enhanced Visual Experience
+
+The latest version includes **automatic color and symbol support** for the best terminal experience:
+
+- **🌈 Smart Color Detection** - Automatically uses colorama for perfect Windows color support
+- **🔤 Unicode Symbols** - Beautiful icons with ASCII fallbacks for older terminals
+- **🖥️ Terminal Adaptation** - Automatically detects your terminal's capabilities
+- **⚡ UTF-8 Support** - Proper encoding for international characters
+
+**Test Your Terminal:**
+```cmd
+python test_colors_symbols.py
+```
+
+**Setup Enhanced Colors (optional):**
+```cmd
+python setup_colors.py
+```
+
+If colors or symbols don't display properly, the app automatically falls back to ASCII alternatives - it always works!
+
 ### Individual Module Usage
 
 You can also run individual modules directly:
