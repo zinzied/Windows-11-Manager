@@ -183,18 +183,20 @@ def show_main_menu():
     print_colored("   └─ Remove unnecessary Windows apps and features", Colors.WHITE)
     print_colored(f"7. {symbols.LIGHTNING} Performance Optimization", Colors.CYAN)
     print_colored("   └─ Optimize system performance and speed", Colors.WHITE)
+    print_colored(f"8. {symbols.KEY} Windows Activation Manager", Colors.CYAN)
+    print_colored("   └─ Manage Windows 10/11 activation status", Colors.WHITE)
 
     print_colored(f"\n{symbols.BOOK} HELP & INFO:", Colors.BOLD + Colors.MAGENTA)
-    print_colored(f"8. {symbols.INFO}  INFORMATION", Colors.BLUE)
+    print_colored(f"9. {symbols.INFO}  INFORMATION", Colors.BLUE)
     print_colored("   └─ Learn about Windows system management", Colors.WHITE)
 
     # Show admin option if not running as admin
     if not check_admin():
-        print_colored(f"9. {symbols.KEY} RESTART AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
+        print_colored(f"10. {symbols.KEY} RESTART AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
         print_colored("   └─ Restart with elevated privileges", Colors.WHITE)
         print_colored(f"0. {symbols.CROSS} EXIT", Colors.YELLOW)
     else:
-        print_colored(f"9. {symbols.CROSS} EXIT", Colors.YELLOW)
+        print_colored(f"0. {symbols.CROSS} EXIT", Colors.YELLOW)
 
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
 
@@ -354,9 +356,9 @@ def main():
         
         try:
             if not is_admin:
-                choice = input(f"\n{Colors.BOLD}Enter your choice (1-9, 0 to exit): {Colors.END}").strip()
+                choice = input(f"\n{Colors.BOLD}Enter your choice (1-10, 0 to exit): {Colors.END}").strip()
             else:
-                choice = input(f"\n{Colors.BOLD}Enter your choice (1-9): {Colors.END}").strip()
+                choice = input(f"\n{Colors.BOLD}Enter your choice (1-9, 0 to exit): {Colors.END}").strip()
 
             if choice == '1':
                 run_script("disable_windows_updates.py")
@@ -373,35 +375,35 @@ def main():
             elif choice == '7':
                 run_module("modules/performance_manager.py")
             elif choice == '8':
+                run_module("modules/activation_manager.py")
+            elif choice == '9':
                 show_information()
                 input(f"\n{Colors.CYAN}Press Enter to return to main menu...{Colors.END}")
-            elif choice == '9':
-                if not is_admin:
-                    # Option 9 is "Restart as Administrator" when not admin
-                    print_colored("\n� Requesting administrator privileges...", Colors.CYAN)
-                    print_colored("Please click 'Yes' in the UAC dialog that appears.", Colors.YELLOW)
-
-                    if request_admin():
-                        print_colored("✅ Admin request sent. The application will restart with elevated privileges.", Colors.GREEN)
-                        sys.exit(0)  # Exit current instance
-                    else:
-                        print_colored("❌ Failed to request admin privileges.", Colors.RED)
-                        input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
+            elif choice == '10' and not is_admin:
+                # Restart as Administrator option (only when not admin)
+                print_colored(f"\n{symbols.RECYCLE} Requesting administrator privileges...", Colors.CYAN)
+                print_colored("Please click 'Yes' in the UAC dialog that appears.", Colors.YELLOW)
+                if request_admin():
+                    print_colored(f"{symbols.CHECK} Admin request sent. The application will restart with elevated privileges.", Colors.GREEN)
+                    sys.exit(0)
                 else:
-                    # Option 9 is "Exit" when running as admin
+                    print_colored(f"{symbols.CROSS} Failed to request admin privileges.", Colors.RED)
+            elif choice == '0':
+                if not is_admin:
+                    # Option 0 is "Exit" when not running as admin
                     print_colored("\n👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
                     print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
                     break
-            elif choice == '0' and not is_admin:
-                # Option 0 is "Exit" when not running as admin
-                print_colored("\n�👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
-                print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
-                break
+                else:
+                    # Option 0 is "Exit" when running as admin
+                    print_colored("\n👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
+                    print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
+                    break
             else:
                 if not is_admin:
-                    print_colored("\n❌ Invalid choice! Please enter 1-9 or 0.", Colors.RED)
+                    print_colored("\n❌ Invalid choice! Please enter 1-10 or 0.", Colors.RED)
                 else:
-                    print_colored("\n❌ Invalid choice! Please enter 1-9.", Colors.RED)
+                    print_colored("\n❌ Invalid choice! Please enter 1-9 or 0.", Colors.RED)
                 input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
                 
         except KeyboardInterrupt:
