@@ -5,9 +5,28 @@
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support%20my%20work-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/Zied)
 
 **Created with ❤️ by Zied Boughdir**
-**GitHub:** [https://github.com/zinzied](https://github.com/zinzied) | **Year:** 2025
+**GitHub:** [https://github.com/zinzied](https://github.com/zinzied) | **Year:** 2025 | **Version:** Active Development
 
 *Tired of Windows 11 doing things you don't want? This toolkit puts YOU back in control!*
+
+📈 **Actively Maintained**: This project is continuously updated with new features and improvements based on real-world usage and community feedback.
+
+## 📚 Table of Contents
+
+- [👋 Hey there, fellow Windows user!](#-hey-there-fellow-windows-user)
+- [🤔 Why I Built This](#-why-i-built-this-and-why-you-need-it)
+- [🎯 What This Toolkit Actually Does For You](#-what-this-toolkit-actually-does-for-you)
+- [🚀 Latest Updates & Enhancements](#-latest-updates--enhancements)
+- [🎯 Features Overview](#-features-overview)
+- [📁 Project Structure](#-project-structure)
+- [🚀 Ready to Take Control?](#-ready-to-take-control-heres-what-you-need)
+- [🎮 How to Use This Magic](#-how-to-use-this-magic)
+- [🛡️ Safety and Restore Features](#safety-and-restore-features)
+- [📝 Important Notes](#important-notes)
+- [🔧 Troubleshooting](#troubleshooting)
+- [📄 License](#-license)
+- [💡 Real-World Examples](#-real-world-examples-because-i-know-you-want-to-see-results)
+- [☕ Support My Work](#-support-my-work)
 
 </div>
 
@@ -107,23 +126,44 @@ So I decided to do something about it. This toolkit is the result of months of r
 - Monitor Microsoft security bulletins manually
 - Consider selective update installation rather than complete disabling
 
-## Files Structure
+## 📁 Project Structure
 
 ```
-Windows-11-System-Manager/
-├── launcher.py                    # Main menu launcher
-├── disable_windows_updates.py     # Windows Update disable script
-├── restore_windows_updates.py     # Windows Update restore script
-├── modules/
-│   ├── onedrive_manager.py        # OneDrive management
-│   ├── telemetry_manager.py       # Privacy & telemetry control
-│   ├── bloatware_manager.py       # Bloatware removal
-│   └── performance_manager.py     # Performance optimization
-├── README.md                      # This documentation
-└── requirements.txt               # Dependencies
+Windows-11-Manager/
+├── 🚀 launcher.py                    # Main menu launcher with colorful UI
+├── 🚫 disable_windows_updates.py     # Windows Update disable script
+├── 🔄 restore_windows_updates.py     # Windows Update restore script
+├── 🔄 comprehensive_restore.py       # Complete system restore functionality
+├── 📁 modules/
+│   ├── 🔑 activation_manager.py      # Windows 10/11 activation management
+│   ├── ☁️  onedrive_manager.py       # OneDrive management & removal
+│   ├── 🔒 telemetry_manager.py       # Privacy & telemetry control
+│   ├── 🗑️  bloatware_manager.py      # Bloatware removal & cleanup
+│   └── ⚡ performance_manager.py     # System performance optimization
+├── 🏃‍♂️ run_as_admin.bat             # Automatic admin elevation (Windows)
+├── 🏃‍♂️ run_as_admin.ps1             # Automatic admin elevation (PowerShell)
+├── 📖 README.md                      # This comprehensive documentation
+├── 📄 LICENSE                        # MIT License
+└── 📦 requirements.txt               # Optional dependencies
 ```
 
-## Features Overview
+## 🚀 Latest Updates & Enhancements
+
+### 🆕 **What's New in 2025**
+- **🔑 Windows Activation Manager**: Complete activation status management for Windows 10/11
+- **🌈 Enhanced Visual Experience**: Smart color detection with Unicode symbols and ASCII fallbacks
+- **📱 Better Terminal Support**: Automatic encoding detection and UTF-8 support
+- **🔧 Improved Admin Detection**: Smarter privilege checking with auto-elevation options
+- **🛡️ Enhanced Safety**: More confirmation prompts and better error handling
+- **📄 MIT License**: Now officially open-source with clear licensing
+
+### 🔥 **Performance Improvements**
+- **Faster Execution**: Optimized subprocess calls and reduced overhead
+- **Better Error Recovery**: Graceful handling of permission issues
+- **Smart Fallbacks**: Works even on older terminals and restricted environments
+- **Memory Efficiency**: Reduced RAM usage during operations
+
+## 🎯 Features Overview
 
 ### 🔄 **Update Management**
 - **Disable Updates**: Stop services, modify registry, disable tasks, block URLs
@@ -152,11 +192,20 @@ Windows-11-System-Manager/
 - **Start Menu**: Clean suggestions and ads
 
 ### ⚡ **Performance Optimization**
-- **Services**: Disable unnecessary background services
+- **Services Management**: Disable unnecessary background services
 - **Visual Effects**: Optimize for performance over appearance
 - **Power Settings**: Set high-performance power plan
-- **Memory Management**: Optimize memory usage
-- **Search Indexing**: Disable for better performance
+- **Memory Management**: Optimize memory usage and reduce RAM consumption
+- **Search Indexing**: Disable Windows Search for better performance
+- **Startup Programs**: Manage and optimize startup applications
+- **System Responsiveness**: Improve overall system speed and responsiveness
+
+### 🔑 **Windows Activation Management** *(New Feature)*
+- **Activation Status**: Check current Windows 10/11 activation status
+- **License Information**: View detailed license and product key information
+- **Hardware ID**: Display hardware fingerprint for activation
+- **Activation Troubleshooting**: Diagnose activation issues
+- **Multi-Edition Support**: Support for Home, Pro, Enterprise editions
 
 ## 🚀 Ready to Take Control? Here's What You Need
 
@@ -186,9 +235,11 @@ That's it! No complicated setup, no weird dependencies. Just download, run, and 
    - Navigate to your folder: `cd C:\WindowsManager\`
    - Run the launcher: `python launcher.py`
 
-   **🎯 Method 3: Built-in Admin Request**
+   **🎯 Method 3: Built-in Admin Detection**
    - Run `python launcher.py` normally
-   - The app will detect you're not admin and offer to restart with privileges
+   - The app automatically detects if you're not admin
+   - Offers to restart with elevated privileges
+   - Smart fallbacks for different Windows configurations
 
 4. **Choose what annoys you most** and let the tool fix it!
 5. **Restart your PC** when prompted (trust me, it's worth the 30 seconds)
@@ -210,13 +261,14 @@ When you run the tool, you'll see this beautiful menu (yes, I'm proud of it! �
 5. 🔒 Privacy & Telemetry Control    ← Stop Microsoft spying
 6. 🗑️  Bloatware Removal            ← Delete the junk
 7. ⚡ Performance Optimization       ← Make it fast again
+8. 🔑 Windows Activation Manager     ← Manage license & activation
 
 📖 HELP & INFO:
-8. ℹ️  INFORMATION                   ← Learn what each tool does
-9. ❌ EXIT                           ← See you later!
+9. ℹ️  INFORMATION                   ← Learn what each tool does
+0. ❌ EXIT                           ← See you later!
 ```
 
-**Pro tip:** Start with option 8 (Information) if you're new to this. I've written detailed explanations of what each tool does!
+**Pro tip:** Start with option 9 (Information) if you're new to this. I've written detailed explanations of what each tool does!
 
 ### 🎨 Enhanced Visual Experience
 
@@ -255,6 +307,9 @@ python modules/bloatware_manager.py
 
 # Performance optimization
 python modules/performance_manager.py
+
+# Windows activation management
+python modules/activation_manager.py
 ```
 
 ## Safety and Restore Features
@@ -311,9 +366,12 @@ The tool includes a comprehensive restore script (`comprehensive_restore.py`) th
 - Consider re-enabling updates regularly to receive security patches
 
 📝 **Compatibility**:
-- Designed for Windows 11
-- May work on Windows 10 with minor modifications
-- Some features require Administrator privileges
+- **Primary Target**: Windows 11 (all editions)
+- **Secondary Support**: Windows 10 (most features work)
+- **Architecture**: x64 and x86 systems supported
+- **Administrator Privileges**: Required for full functionality
+- **Python Version**: 3.6 or higher required
+- **Dependencies**: Minimal (only `colorama` for enhanced colors)
 
 ## Troubleshooting
 
@@ -344,9 +402,11 @@ After running the disable script, you can verify:
 - Tasks: `taskschd.msc` → Check Windows Update tasks are disabled
 - Hosts: Check `C:\Windows\System32\drivers\etc\hosts` for blocked URLs
 
-## License
+## 📄 License
 
-These scripts are provided as-is for educational and administrative purposes. Use at your own risk.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**TL;DR**: You can use, modify, and distribute this software freely, but it comes with no warranty. Use at your own risk and responsibility.
 
 ## Author
 
@@ -370,8 +430,29 @@ I didn't just throw together some scripts and call it a day. This toolkit repres
 - **Real-world scenarios** - built by someone who actually uses Windows 11 daily
 - **Honest documentation** - I tell you exactly what each tool does and why
 
-### � **Constantly Improving**
+### 🔧 **Constantly Improving**
 This isn't a "set it and forget it" project. I actively use this toolkit on my own systems and continuously improve it based on real-world experience.
+
+### 🔧 **Technical Highlights**
+
+**Smart Architecture**:
+- **Modular Design**: Each feature is a separate module for easy maintenance
+- **Centralized Launcher**: Single entry point with intuitive menu system
+- **Cross-Platform Compatibility**: Works on different Windows terminal environments
+- **Fail-Safe Operations**: Built-in rollback and restore capabilities
+
+**Advanced Features**:
+- **Auto-Privilege Detection**: Automatically detects and requests admin rights
+- **Smart Color Support**: Uses colorama for perfect Windows color rendering
+- **Unicode Fallbacks**: Graceful degradation for older terminal systems
+- **Comprehensive Logging**: Detailed operation logs for troubleshooting
+- **Multi-Language Console**: Proper UTF-8 encoding for international systems
+
+**Security & Safety**:
+- **Confirmation Dialogs**: Prevents accidental system modifications
+- **Restore Scripts**: Complete rollback functionality for all changes
+- **Admin Validation**: Ensures proper privileges before system modifications
+- **Error Recovery**: Graceful handling of permission and access issues
 
 ## 💡 Real-World Examples (Because I Know You Want to See Results!)
 
@@ -410,8 +491,22 @@ Step 2: Choose option 1 (Disable Windows Updates)
 Step 3: Choose option 5 (Privacy & Telemetry Control)
 Step 4: Choose option 6 (Bloatware Removal)
 Step 5: Choose option 7 (Performance Optimization)
+Step 6: Choose option 8 (Check Activation Status) - Optional
 
 Result: YOUR computer finally behaves like YOUR computer!
+```
+
+### 🔑 **"License & Activation Check" Setup** *(New)*
+*Perfect for system administrators and users who need activation verification*
+
+```
+Step 1: Run launcher.py as Administrator
+Step 2: Choose option 8 (Windows Activation Manager)
+Step 3: Check current activation status
+Step 4: View license information and hardware ID
+Step 5: Troubleshoot any activation issues
+
+Result: Complete visibility into your Windows license status!
 ```
 
 ## ☕ Support My Work
@@ -438,7 +533,7 @@ Look, I have to say this (lawyers, you know 🙄):
 
 - **Create a system backup** before making major changes (Windows has built-in backup tools!)
 - **Start with small changes** to see how your system responds
-- **Read the information section** (option 8) to understand what each tool does
+- **Read the information section** (option 9) to understand what each tool does
 - **Keep the restore scripts handy** (that's why I built them!)
 
 I use this toolkit daily on my own computers, but I can't be responsible if something goes wrong on yours. That said, I've designed it to be as safe as possible, and the restore functionality can undo everything if needed.
