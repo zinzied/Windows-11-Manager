@@ -160,13 +160,13 @@ def show_menu():
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored(f"{symbols.TRASH}  SYSTEM OPTIMIZER & CLEANER", Colors.BOLD + Colors.CYAN)
     print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
     print_colored(f"\n1. {symbols.ROCKET} One-Click System Cleanup (Temp, Cache, Prefetch)", Colors.GREEN)
     print_colored(f"2. {symbols.TRASH}  Clean Temporary Files Only", Colors.YELLOW)
     print_colored(f"3. {symbols.FOLDER} Clean Windows Update Cache", Colors.YELLOW)
     print_colored(f"4. {symbols.LIGHTNING} Clean Prefetch Files", Colors.YELLOW)
     print_colored(f"5. {symbols.CLOUD} Flush DNS Cache", Colors.BLUE)
-    print_colored("6. 🔙 Return to Main Menu", Colors.CYAN)
+    print_colored(f"6. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def main():
     while True:

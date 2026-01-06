@@ -50,9 +50,9 @@ def enable_gaming_mode():
     # We won't disable everything, just maybe animations if we wanted to, but let's stick to safe tweaks
     
     print_colored(f"\n{symbols.LIGHTNING} GAMING MODE ACTIVATED!", Colors.GREEN + Colors.BOLD)
-    print_info("• Power Plan: High Performance")
-    print_info("• Background Services: Paused")
-    print_info("• System resources focused on gaming")
+    print_info(f"{symbols.BULLET} Power Plan: High Performance")
+    print_info(f"{symbols.BULLET} Background Services: Paused")
+    print_info(f"{symbols.BULLET} System resources focused on gaming")
     print_info("\nDon't forget to deactivate Gaming Mode when finished!")
 
 def disable_gaming_mode():
@@ -90,10 +90,10 @@ def show_menu():
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored(f"{symbols.LIGHTNING}  GAMING MODE OPTIMIZER", Colors.BOLD + Colors.CYAN)
     print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
     print_colored(f"\n1. {symbols.ROCKET} Activate Gaming Mode (High Perf + Kill Services)", Colors.GREEN)
     print_colored(f"2. {symbols.STOP} Deactivate Gaming Mode (Restore Defaults)", Colors.YELLOW)
-    print_colored("3. 🔙 Return to Main Menu", Colors.CYAN)
+    print_colored(f"3. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def main():
     while True:

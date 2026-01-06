@@ -13,49 +13,40 @@ import winreg
 import os
 import sys
 import shutil
-from pathlib import Path
 import time
+from pathlib import Path
 
-# Color codes for terminal output
-class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
+# Ensure we can import modules
+sys.path.append(os.path.join(os.path.dirname(__file__), 'modules'))
 
-def print_colored(text, color=Colors.WHITE):
-    """Print text with color."""
-    print(f"{color}{text}{Colors.END}")
+try:
+    from modules.console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
+except ImportError:
+    # Fallback if run directly from root without modules package context
+    try:
+        from console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
+    except ImportError:
+        # Define fallback if module is missing
+        class Colors:
+            RED = '\033[91m'
+            GREEN = '\033[92m'
+            YELLOW = '\033[93m'
+            BLUE = '\033[94m'
+            MAGENTA = '\033[95m'
+            CYAN = '\033[96m'
+            WHITE = '\033[97m'
+            BOLD = '\033[1m'
+            END = '\033[0m'
+        
+        def print_colored(text, color=Colors.WHITE): print(f"{color}{text}{Colors.END}")
+        def print_header(text): print(f"\n=== {text} ===")
+        def print_success(text): print(f"OK: {text}")
+        def print_error(text): print(f"ERROR: {text}")
+        def print_warning(text): print(f"WARNING: {text}")
+        def print_info(text): print(f"INFO: {text}")
+        symbols = type('obj', (object,), {'CROSS': 'x', 'CHECK': 'v', 'WARNING': '!', 'INFO': 'i', 'BLOCK': '#', 'RECYCLE': '@', 'GEAR': '*', 'TOOLS': 'T', 'GLOBE': 'G', 'WAVE': '~', 'SHIELD': 'S', 'TRASH': 'D'})
 
-def print_header(title):
-    """Print a section header."""
-    print_colored(f"\n{'=' * 60}", Colors.CYAN)
-    print_colored(f"🔄 {title}", Colors.BOLD + Colors.CYAN)
-    print_colored(f"{'=' * 60}", Colors.CYAN)
-
-def print_success(message):
-    """Print success message."""
-    print_colored(f"✅ {message}", Colors.GREEN)
-
-def print_error(message):
-    """Print error message."""
-    print_colored(f"❌ {message}", Colors.RED)
-
-def print_warning(message):
-    """Print warning message."""
-    print_colored(f"⚠️  {message}", Colors.YELLOW)
-
-def print_info(message):
-    """Print info message."""
-    print_colored(f"ℹ️  {message}", Colors.BLUE)
-
-def run_command(command, description, check_output=False):
+def run_command(command, description, check_output=False, ignore_errors=False):
     """Run a command and handle errors with optional output check."""
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -64,10 +55,12 @@ def run_command(command, description, check_output=False):
             if check_output:
                 return result.stdout.strip()
         else:
-            print_error(f"{description} - {result.stderr.strip()}")
+            if not ignore_errors:
+                print_error(f"{description} - {result.stderr.strip()}")
             return None
     except Exception as e:
-        print_error(f"{description} - {str(e)}")
+        if not ignore_errors:
+            print_error(f"{description} - {str(e)}")
         return None
 
 def check_admin():
@@ -98,7 +91,8 @@ def create_backup_registry_key(root_key, subkey):
     except FileNotFoundError:
         pass
     except Exception as e:
-        print_error(f"Failed to backup {subkey}: {str(e)}")
+        # Silently fail backup if permission issues, as restore is priority
+        pass
 
 def restore_registry_value(root_key, subkey, value_name, default_value, value_type=winreg.REG_DWORD):
     """Restore a registry value to default."""
@@ -113,7 +107,7 @@ def restore_registry_value(root_key, subkey, value_name, default_value, value_ty
 
 def restore_windows_updates():
     """Restore Windows Update functionality with enhanced checks."""
-    print_header("Restoring Windows Updates")
+    print_colored(f"\n{symbols.RECYCLE} Restoring Windows Updates", Colors.BOLD + Colors.CYAN)
     
     # Re-enable services with dependency handling
     services = [
@@ -125,7 +119,7 @@ def restore_windows_updates():
     ]
     for service, start_type in services:
         run_command(f'sc config "{service}" start= {start_type}', f"Configuring {service} to {start_type}")
-        run_command(f'sc start "{service}"', f"Starting {service}")
+        run_command(f'sc start "{service}"', f"Starting {service}", ignore_errors=True)
     
     # Restore registry keys and values (reverse disable logic)
     policy_keys = [
@@ -139,29 +133,29 @@ def restore_windows_updates():
         except FileNotFoundError:
             print_info(f"Policy key not found: {subkey}")
         except Exception as e:
-            print_error(f"Failed to delete {subkey}: {str(e)}")
+            print_warning(f"Failed to delete {subkey}: {str(e)}")
     
     # Restore additional update settings
     restore_registry_value(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update", "AUOptions", 1)
     restore_registry_value(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate", "DoNotConnectToWindowsUpdateInternetLocations", 0)
     
     # Reset Windows Update components
-    run_command('net stop wuauserv', "Stopping Windows Update service for reset")
-    run_command('net stop cryptSvc', "Stopping Cryptographic Services")
-    run_command('net stop bits', "Stopping Background Intelligent Transfer Service")
-    run_command('net stop msiserver', "Stopping Windows Installer")
-    run_command('ren C:\\Windows\\SoftwareDistribution SoftwareDistribution.old', "Renaming SoftwareDistribution folder")
-    run_command('ren C:\\Windows\\System32\\catroot2 catroot2.old', "Renaming Catroot2 folder")
-    run_command('net start wuauserv', "Starting Windows Update service")
-    run_command('net start cryptSvc', "Starting Cryptographic Services")
-    run_command('net start bits', "Starting Background Intelligent Transfer Service")
-    run_command('net start msiserver', "Starting Windows Installer")
+    run_command('net stop wuauserv', "Stopping Windows Update service for reset", ignore_errors=True)
+    run_command('net stop cryptSvc', "Stopping Cryptographic Services", ignore_errors=True)
+    run_command('net stop bits', "Stopping Background Intelligent Transfer Service", ignore_errors=True)
+    run_command('net stop msiserver', "Stopping Windows Installer", ignore_errors=True)
+    run_command('ren C:\\Windows\\SoftwareDistribution SoftwareDistribution.old', "Renaming SoftwareDistribution folder", ignore_errors=True)
+    run_command('ren C:\\Windows\\System32\\catroot2 catroot2.old', "Renaming Catroot2 folder", ignore_errors=True)
+    run_command('net start wuauserv', "Starting Windows Update service", ignore_errors=True)
+    run_command('net start cryptSvc', "Starting Cryptographic Services", ignore_errors=True)
+    run_command('net start bits', "Starting Background Intelligent Transfer Service", ignore_errors=True)
+    run_command('net start msiserver', "Starting Windows Installer", ignore_errors=True)
     
     print_success("Windows Updates restoration completed with component reset.")
 
 def restore_onedrive():
     """Enhanced restore for OneDrive functionality."""
-    print_header("Restoring OneDrive")
+    print_colored(f"\n{symbols.CLOUD} Restoring OneDrive", Colors.BOLD + Colors.CYAN)
     
     # Re-enable services
     services = [
@@ -170,7 +164,7 @@ def restore_onedrive():
     ]
     for service, start_type in services:
         run_command(f'sc config "{service}" start= {start_type}', f"Enabling {service}")
-        run_command(f'sc start "{service}"', f"Starting {service}")
+        run_command(f'sc start "{service}"', f"Starting {service}", ignore_errors=True)
     
     # Reset registry modifications (reverse disable settings)
     registry_resets = [
@@ -253,7 +247,7 @@ def restore_onedrive():
 
 def restore_telemetry():
     """Enhanced restore for telemetry and diagnostic services."""
-    print_header("Restoring Telemetry Services")
+    print_colored(f"\n{symbols.SHIELD} Restoring Telemetry Services", Colors.BOLD + Colors.CYAN)
     
     # Re-enable telemetry services with additional ones
     services = [
@@ -262,7 +256,7 @@ def restore_telemetry():
     ]
     for service in services:
         run_command(f'sc config "{service}" start= auto', f"Enabling {service}")
-        run_command(f'sc start "{service}"', f"Starting {service}")
+        run_command(f'sc start "{service}"', f"Starting {service}", ignore_errors=True)
     
     # Reset telemetry policy registry keys and values
     telemetry_resets = [
@@ -314,13 +308,13 @@ def restore_telemetry():
         r"\Microsoft\Windows\Autochk\Proxy",
     ]
     for task in tasks:
-        run_command(f'schtasks /change /tn "{task}" /enable', f"Enabling task {task}")
+        run_command(f'schtasks /change /tn "{task}" /enable', f"Enabling task {task}", ignore_errors=True)
     
     print_success("Telemetry restoration completed with full service and task re-enablement.")
 
 def restore_performance():
     """Enhanced restore for performance-related services and settings."""
-    print_header("Restoring Performance Settings")
+    print_colored(f"\n{symbols.GEAR} Restoring Performance Settings", Colors.BOLD + Colors.CYAN)
     
     # Re-enable all potentially disabled services
     services = [
@@ -329,7 +323,7 @@ def restore_performance():
     ]
     for service in services:
         run_command(f'sc config "{service}" start= auto', f"Enabling {service}")
-        run_command(f'sc start "{service}"', f"Starting {service}")
+        run_command(f'sc start "{service}"', f"Starting {service}", ignore_errors=True)
     
     # Reset power plan to balanced and restore defaults
     run_command(
@@ -347,7 +341,7 @@ def restore_performance():
     
     # Re-enable Windows Search indexing
     run_command('sc config "WSearch" start= auto', "Enabling Windows Search")
-    run_command('sc start "WSearch"', "Starting Windows Search")
+    run_command('sc start "WSearch"', "Starting Windows Search", ignore_errors=True)
     
     # Restore memory management defaults
     restore_registry_value(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management", "LargeSystemCache", 0)
@@ -356,7 +350,7 @@ def restore_performance():
 
 def restore_xbox_services():
     """Enhanced restore for Xbox services with additional components."""
-    print_header("Restoring Xbox Services")
+    print_colored(f"\n{symbols.CONTROL} Restoring Xbox Services", Colors.BOLD + Colors.CYAN)
     
     xbox_services = [
         "XblAuthManager", "XblGameSave", "XboxGipSvc", "XboxNetApiSvc",
@@ -364,7 +358,7 @@ def restore_xbox_services():
     ]
     for service in xbox_services:
         run_command(f'sc config "{service}" start= auto', f"Enabling {service}")
-        run_command(f'sc start "{service}"', f"Starting {service}")
+        run_command(f'sc start "{service}"', f"Starting {service}", ignore_errors=True)
     
     # Reinstall Xbox components if needed
     run_command('dism /online /add-capability /capabilityname:Xbox.*', "Reinstalling Xbox capabilities")
@@ -373,7 +367,7 @@ def restore_xbox_services():
 
 def restore_bloatware():
     """New feature: Restore bloatware and apps."""
-    print_header("Restoring Bloatware and System Apps")
+    print_colored(f"\n{symbols.RECYCLE} Restoring Bloatware and System Apps", Colors.BOLD + Colors.CYAN)
     
     # Reinstall common bloatware apps
     apps_to_restore = [
@@ -407,7 +401,7 @@ def restore_bloatware():
     
     for app in apps_to_restore:
         ps_command = f'Get-AppxPackage -allusers *{app}* | Foreach {{Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\\AppXManifest.xml"}}'
-        run_command(f'powershell -Command "{ps_command}"', f"Restoring {app}")
+        run_command(f'powershell -Command "{ps_command}"', f"Restoring {app}", ignore_errors=True)
     
     # Re-enable Cortana
     restore_registry_value(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Policies\Microsoft\Windows\Windows Search", "AllowCortana", 1)
@@ -426,7 +420,7 @@ def comprehensive_restore():
         return
     
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
-    print_colored("🔄 COMPREHENSIVE SYSTEM RESTORE", Colors.BOLD + Colors.MAGENTA)
+    print_colored(f"{symbols.RECYCLE} COMPREHENSIVE SYSTEM RESTORE", Colors.BOLD + Colors.MAGENTA)
     print_colored("=" * 70, Colors.MAGENTA)
     
     print_warning("This will restore all system modifications made by this tool!")
@@ -456,18 +450,17 @@ def comprehensive_restore():
 
 def show_restore_menu():
     """Enhanced restore menu with new options."""
-    print_colored("\n" + "=" * 60, Colors.CYAN)
-    print_colored("🔄 COMPREHENSIVE SYSTEM RESTORE", Colors.BOLD + Colors.CYAN)
-    print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose what to restore:", Colors.BOLD + Colors.CYAN)
-    print_colored("\n1. 🔄 Restore Everything (Comprehensive)", Colors.RED)
-    print_colored("2. 🔄 Restore Windows Updates Only", Colors.YELLOW)
-    print_colored("3. ☁️  Restore OneDrive Only", Colors.YELLOW)
-    print_colored("4. 🔒 Restore Telemetry Only", Colors.YELLOW)
-    print_colored("5. ⚡ Restore Performance Settings Only", Colors.YELLOW)
-    print_colored("6. 🎮 Restore Xbox Services Only", Colors.YELLOW)
-    print_colored("7. 🗑️  Restore Bloatware and Apps Only", Colors.YELLOW)
-    print_colored("8. 🔙 Exit", Colors.CYAN)
+    clear_screen()
+    print_header("COMPREHENSIVE SYSTEM RESTORE")
+    print_colored(f"\n{symbols.TARGET} Choose what to restore:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.RECYCLE} Restore Everything (Comprehensive)", Colors.RED)
+    print_colored(f"2. {symbols.RECYCLE} Restore Windows Updates Only", Colors.YELLOW)
+    print_colored(f"3. {symbols.CLOUD} Restore OneDrive Only", Colors.YELLOW)
+    print_colored(f"4. {symbols.SHIELD} Restore Telemetry Only", Colors.YELLOW)
+    print_colored(f"5. {symbols.GEAR} Restore Performance Settings Only", Colors.YELLOW)
+    print_colored(f"6. {symbols.CONTROL} Restore Xbox Services Only", Colors.YELLOW)
+    print_colored(f"7. {symbols.TRASH} Restore Bloatware and Apps Only", Colors.YELLOW)
+    print_colored(f"8. {symbols.WAVE} Exit", Colors.CYAN)
 
 def main():
     """Main restore function with admin check."""
@@ -499,7 +492,7 @@ def main():
             elif choice == '7':
                 restore_bloatware()
             elif choice == '8':
-                print_colored("\n👋 Restore operations completed!", Colors.BOLD + Colors.CYAN)
+                print_colored(f"\n{symbols.WAVE} Restore operations completed!", Colors.BOLD + Colors.CYAN)
                 break
             else:
                 print_error("Invalid choice! Please enter a number between 1-8.")

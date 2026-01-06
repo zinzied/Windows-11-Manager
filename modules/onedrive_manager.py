@@ -13,45 +13,12 @@ import winreg
 import os
 import sys
 from pathlib import Path
+import ctypes
 
-# Color codes for terminal output
-class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
-
-def print_colored(text, color=Colors.WHITE):
-    """Print text with color."""
-    print(f"{color}{text}{Colors.END}")
-
-def print_header(title):
-    """Print a section header."""
-    print_colored(f"\n{'=' * 60}", Colors.CYAN)
-    print_colored(f"🔧 {title}", Colors.BOLD + Colors.CYAN)
-    print_colored(f"{'=' * 60}", Colors.CYAN)
-
-def print_success(message):
-    """Print success message."""
-    print_colored(f"✅ {message}", Colors.GREEN)
-
-def print_error(message):
-    """Print error message."""
-    print_colored(f"❌ {message}", Colors.RED)
-
-def print_warning(message):
-    """Print warning message."""
-    print_colored(f"⚠️  {message}", Colors.YELLOW)
-
-def print_info(message):
-    """Print info message."""
-    print_colored(f"ℹ️  {message}", Colors.BLUE)
+try:
+    from console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
+except ImportError:
+    from modules.console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
 
 def run_command(command, description):
     """Run a command and handle errors."""
@@ -66,7 +33,7 @@ def run_command(command, description):
 
 def stop_onedrive_processes():
     """Stop all OneDrive processes."""
-    print_header("Stopping OneDrive Processes")
+    print_colored(f"\n{symbols.STOP} Stopping OneDrive Processes", Colors.BOLD + Colors.CYAN)
     
     processes = [
         "OneDrive.exe",
@@ -79,7 +46,7 @@ def stop_onedrive_processes():
 
 def disable_onedrive_services():
     """Disable OneDrive related services."""
-    print_header("Disabling OneDrive Services")
+    print_colored(f"\n{symbols.GEAR} Disabling OneDrive Services", Colors.BOLD + Colors.CYAN)
     
     services = [
         "OneSyncSvc",  # OneDrive Sync Service
@@ -92,7 +59,7 @@ def disable_onedrive_services():
 
 def modify_onedrive_registry():
     """Modify registry to disable OneDrive."""
-    print_header("Modifying OneDrive Registry Settings")
+    print_colored(f"\n{symbols.TOOLS} Modifying OneDrive Registry Settings", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -135,7 +102,7 @@ def modify_onedrive_registry():
 
 def remove_onedrive_startup():
     """Remove OneDrive from startup."""
-    print_header("Removing OneDrive from Startup")
+    print_colored(f"\n{symbols.TRASH} Removing OneDrive from Startup", Colors.BOLD + Colors.CYAN)
     
     startup_locations = [
         r"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
@@ -162,7 +129,7 @@ def remove_onedrive_startup():
 
 def uninstall_onedrive():
     """Uninstall OneDrive application."""
-    print_header("Uninstalling OneDrive Application")
+    print_colored(f"\n{symbols.TRASH} Uninstalling OneDrive Application", Colors.BOLD + Colors.CYAN)
     
     # Try to find OneDrive setup
     onedrive_paths = [
@@ -181,7 +148,7 @@ def uninstall_onedrive():
 def disable_onedrive_completely():
     """Disable OneDrive completely."""
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
-    print_colored("☁️  ONEDRIVE COMPLETE DISABLE PROCESS", Colors.BOLD + Colors.MAGENTA)
+    print_colored(f"{symbols.CLOUD} ONEDRIVE COMPLETE DISABLE PROCESS", Colors.BOLD + Colors.MAGENTA)
     print_colored("=" * 70, Colors.MAGENTA)
     
     print_warning("This will completely disable OneDrive on your system!")
@@ -208,38 +175,37 @@ def disable_onedrive_completely():
 
 def show_onedrive_menu():
     """Display OneDrive management menu."""
-    print_colored("\n" + "=" * 60, Colors.CYAN)
-    print_colored("☁️  ONEDRIVE MANAGEMENT", Colors.BOLD + Colors.CYAN)
-    print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
-    print_colored("\n1. 🚫 Disable OneDrive Completely", Colors.RED)
-    print_colored("2. 🔄 Restore OneDrive (Basic)", Colors.GREEN)
-    print_colored("3. 📊 Check OneDrive Status", Colors.BLUE)
-    print_colored("4. 🔙 Return to Main Menu", Colors.YELLOW)
+    clear_screen()
+    print_header("ONEDRIVE MANAGEMENT")
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.BLOCK} Disable OneDrive Completely", Colors.RED)
+    print_colored(f"2. {symbols.RECYCLE} Restore OneDrive (Basic)", Colors.GREEN)
+    print_colored(f"3. {symbols.INFO} Check OneDrive Status", Colors.BLUE)
+    print_colored(f"4. {symbols.WAVE} Return to Main Menu", Colors.YELLOW)
 
 def check_onedrive_status():
     """Check current OneDrive status."""
-    print_header("Checking OneDrive Status")
+    print_colored(f"\n{symbols.INFO} Checking OneDrive Status", Colors.BOLD + Colors.CYAN)
     
     # Check if OneDrive process is running
     try:
         result = subprocess.run('tasklist /fi "imagename eq OneDrive.exe"', shell=True, capture_output=True, text=True)
         if "OneDrive.exe" in result.stdout:
-            print_colored("OneDrive Process: RUNNING", Colors.GREEN)
+            print_colored(f"{symbols.CHECK} OneDrive Process: RUNNING", Colors.GREEN)
         else:
-            print_colored("OneDrive Process: NOT RUNNING", Colors.RED)
+            print_colored(f"{symbols.CROSS} OneDrive Process: NOT RUNNING", Colors.RED)
     except:
-        print_colored("OneDrive Process: ERROR CHECKING", Colors.YELLOW)
+        print_colored(f"{symbols.WARNING} OneDrive Process: ERROR CHECKING", Colors.YELLOW)
     
     # Check registry settings
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Policies\Microsoft\Windows\OneDrive")
-        print_colored("OneDrive Policies: DISABLED", Colors.RED)
+        print_colored(f"{symbols.BLOCK} OneDrive Policies: DISABLED", Colors.RED)
         winreg.CloseKey(key)
     except FileNotFoundError:
-        print_colored("OneDrive Policies: ENABLED", Colors.GREEN)
+        print_colored(f"{symbols.CHECK} OneDrive Policies: ENABLED", Colors.GREEN)
     except Exception as e:
-        print_colored(f"OneDrive Policies: ERROR - {str(e)}", Colors.YELLOW)
+        print_colored(f"{symbols.WARNING} OneDrive Policies: ERROR - {str(e)}", Colors.YELLOW)
 
 def main():
     """Main OneDrive management function."""
@@ -271,4 +237,6 @@ def main():
             input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
 
 if __name__ == "__main__":
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        print_warning("Not running as Administrator. Some features may fail.")
     main()

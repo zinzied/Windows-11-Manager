@@ -32,6 +32,10 @@ def print_launcher_header():
     print_colored("    Complete Control Over Your Windows 11 Updates (Windows 10 Compatible)", Colors.CYAN)
     print_colored("=" * 70, Colors.MAGENTA)
 
+
+
+
+
 def show_main_menu():
     """Display the main launcher menu."""
     print_launcher_header()
@@ -39,11 +43,8 @@ def show_main_menu():
 
     print_colored(f"\n{symbols.RECYCLE} UPDATE MANAGEMENT:", Colors.BOLD + Colors.MAGENTA)
     print_colored(f"1. {symbols.BLOCK} DISABLE Windows Updates", Colors.RED)
-    # print_colored("   └─ Stop, disable, and block all Windows update mechanisms", Colors.WHITE)
     print_colored(f"2. {symbols.RECYCLE} RESTORE Windows Updates", Colors.GREEN)
-    # print_colored("   └─ Re-enable all Windows update functionality", Colors.WHITE)
     print_colored(f"3. {symbols.RECYCLE} COMPREHENSIVE RESTORE", Colors.BOLD + Colors.GREEN)
-    # print_colored("   └─ Restore ALL system modifications (Updates, OneDrive, etc.)", Colors.WHITE)
 
     print_colored(f"\n{symbols.TOOLS}  SYSTEM OPTIMIZATION:", Colors.BOLD + Colors.MAGENTA)
     print_colored(f"4. {symbols.CLOUD}  OneDrive Management", Colors.CYAN)
@@ -51,72 +52,71 @@ def show_main_menu():
     print_colored(f"6. {symbols.TRASH}  Bloatware Removal", Colors.CYAN)
     print_colored(f"7. {symbols.LIGHTNING} Performance Optimization", Colors.CYAN)
     print_colored(f"8. {symbols.KEY} Windows Activation", Colors.CYAN)
-    
+
     print_colored(f"\n{symbols.GEAR}  ADVANCED TOOLS:", Colors.BOLD + Colors.MAGENTA)
-    print_colored(f"9. 🖱️  Context Menu Manager (Win 10/11)", Colors.YELLOW)
-    print_colored(f"10. 🧹 System Cleaner & Optimizer", Colors.YELLOW)
-    print_colored(f"11. 🌐 DNS Switcher", Colors.YELLOW)
-    print_colored(f"12. 🎩 God Mode Toggle", Colors.YELLOW)
-    print_colored(f"13. 🎮 Gaming Mode", Colors.YELLOW)
-    print_colored(f"14. 📦 Software Installer (Winget)", Colors.YELLOW)
+    print_colored(f"9. {symbols.GEAR}  Context Menu Manager (Win 10/11)", Colors.YELLOW)
+    print_colored(f"10. {symbols.TRASH} System Cleaner & Optimizer", Colors.YELLOW)
+    print_colored(f"11. {symbols.GLOBE} DNS Switcher", Colors.YELLOW)
+    print_colored(f"12. {symbols.FOLDER} God Mode Toggle", Colors.YELLOW)
+    print_colored(f"13. {symbols.LIGHTNING} Gaming Mode", Colors.YELLOW)
+    print_colored(f"14. {symbols.DOWNLOAD} Software Installer (Winget)", Colors.YELLOW)
 
     print_colored(f"\n{symbols.BOOK} HELP & INFO:", Colors.BOLD + Colors.MAGENTA)
     print_colored(f"15. {symbols.INFO}  INFORMATION", Colors.BLUE)
 
-    # Show admin option if not running as admin
     if not check_admin():
-        print_colored(f"99. {symbols.KEY} RESTART AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
+        print_colored(f"\n99. {symbols.KEY} RESTART AS ADMINISTRATOR", Colors.BOLD + Colors.GREEN)
         print_colored(f"0. {symbols.CROSS} EXIT", Colors.YELLOW)
     else:
-        print_colored(f"0. {symbols.CROSS} EXIT", Colors.YELLOW)
+        print_colored(f"\n0. {symbols.CROSS} EXIT", Colors.YELLOW)
 
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
+
 
 def show_information():
     """Display information about the tools."""
     print_colored("\n" + "=" * 70, Colors.BLUE)
     print_colored(f"{symbols.INFO}  WINDOWS 11 SYSTEM MANAGER - INFORMATION", Colors.BOLD + Colors.BLUE)
     print_colored("=" * 70, Colors.BLUE)
-    
+
     print_colored("New Features:", Colors.BOLD + Colors.GREEN)
-    print_colored("• Context Menu: Switch between classic Win 10 and modern Win 11 styles", Colors.WHITE)
-    print_colored("• System Cleaner: Clean temp files, prefetch, and update cache", Colors.WHITE)
-    print_colored("• DNS Switcher: Quickly toggle between Google, Cloudflare, OpenDNS", Colors.WHITE)
-    print_colored("• God Mode: Enable the hidden Master Control Panel", Colors.WHITE)
-    print_colored("• Gaming Mode: Optimize power plan and services for gaming", Colors.WHITE)
-    print_colored("• Software Installer: Bulk install apps using Winget", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Context Menu: Switch between classic Win 10 and modern Win 11 styles", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} System Cleaner: Clean temp files, prefetch, and update cache", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} DNS Switcher: Quickly toggle between Google, Cloudflare, OpenDNS", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} God Mode: Enable the hidden Master Control Panel", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Gaming Mode: Optimize power plan and services for gaming", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Software Installer: Bulk install apps using Winget", Colors.WHITE)
 
     print_colored(f"\n{symbols.GEAR} UPDATE MANAGEMENT:", Colors.BOLD + Colors.CYAN)
-    print_colored("• Stops Windows Update services (wuauserv, bits, dosvc, UsoSvc)", Colors.WHITE)
-    print_colored("• Modifies registry to disable automatic updates", Colors.WHITE)
-    print_colored("• Disables Windows Update scheduled tasks", Colors.WHITE)
-    print_colored("• Blocks Windows Update URLs in hosts file", Colors.WHITE)
-    print_colored("• Provides complete restoration capabilities", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Stops Windows Update services (wuauserv, bits, dosvc, UsoSvc)", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Modifies registry to disable automatic updates", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Disables Windows Update scheduled tasks", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Blocks Windows Update URLs in hosts file", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Provides complete restoration capabilities", Colors.WHITE)
 
     print_colored(f"\n{symbols.TOOLS}  SYSTEM MANAGEMENT:", Colors.BOLD + Colors.CYAN)
-    print_colored("• OneDrive: Complete disable/enable with registry cleanup", Colors.WHITE)
-    print_colored("• Telemetry: Disable data collection and enhance privacy", Colors.WHITE)
-    print_colored("• Bloatware: Remove unnecessary Windows apps and features", Colors.WHITE)
-    print_colored("• Performance: Optimize services, visual effects, and power", Colors.WHITE)
-    print_colored("• Privacy: Control location, advertising ID, and feedback", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} OneDrive: Complete disable/enable with registry cleanup", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Telemetry: Disable data collection and enhance privacy", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Bloatware: Remove unnecessary Windows apps and features", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Performance: Optimize services, visual effects, and power", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} Privacy: Control location, advertising ID, and feedback", Colors.WHITE)
 
     print_colored(f"\n{symbols.WARNING}  IMPORTANT WARNINGS:", Colors.BOLD + Colors.YELLOW)
-    print_colored("• Run as Administrator for full functionality", Colors.YELLOW)
-    print_colored("• Disabling updates can leave your system vulnerable", Colors.YELLOW)
-    print_colored("• Only disable updates when absolutely necessary", Colors.YELLOW)
-    print_colored("• Keep the restore script safe for future use", Colors.YELLOW)
-    print_colored("• Restart recommended after making changes", Colors.YELLOW)
+    print_colored(f"{symbols.BULLET} Run as Administrator for full functionality", Colors.YELLOW)
+    print_colored(f"{symbols.BULLET} Disabling updates can leave your system vulnerable", Colors.YELLOW)
+    print_colored(f"{symbols.BULLET} Only disable updates when absolutely necessary", Colors.YELLOW)
+    print_colored(f"{symbols.BULLET} Keep the restore script safe for future use", Colors.YELLOW)
+    print_colored(f"{symbols.BULLET} Restart recommended after making changes", Colors.YELLOW)
 
     print_colored(f"\n{symbols.FOLDER} FILES INCLUDED:", Colors.BOLD + Colors.MAGENTA)
-    print_colored("• disable_windows_updates.py - Main disable script", Colors.WHITE)
-    print_colored("• restore_windows_updates.py - Restoration script", Colors.WHITE)
-    print_colored("• launcher.py - This main menu launcher", Colors.WHITE)
-    print_colored("• modules/ - Directory containing all feature modules", Colors.WHITE)
-    print_colored("• README.md - Complete documentation", Colors.WHITE)
-    print_colored("• requirements.txt - Dependency information", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} disable_windows_updates.py - Main disable script", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} restore_windows_updates.py - Restoration script", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} launcher.py - This main menu launcher", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} modules/ - Directory containing all feature modules", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} README.md - Complete documentation", Colors.WHITE)
+    print_colored(f"{symbols.BULLET} requirements.txt - Dependency information", Colors.WHITE)
 
     print_colored("\n" + "=" * 70, Colors.BLUE)
-
 def run_script(script_name):
     """Run a Python script."""
     try:
@@ -171,10 +171,10 @@ def request_admin():
             )
             return True
         else:
-            print_colored("\n❌ Admin privilege request is only supported on Windows.", Colors.RED)
+            print_colored(f"\n{symbols.CROSS} Admin privilege request is only supported on Windows.", Colors.RED)
             return False
     except Exception as e:
-        print_colored(f"\n❌ Failed to request admin privileges: {e}", Colors.RED)
+        print_colored(f"\n{symbols.CROSS} Failed to request admin privileges: {e}", Colors.RED)
         return False
 
 def main():
@@ -262,18 +262,18 @@ def main():
                 else:
                     print_colored(f"{symbols.CROSS} Failed to request admin privileges.", Colors.RED)
             elif choice == '0':
-                print_colored("\n👋 Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
-                print_colored("Stay safe and keep your system optimized! 🛡️", Colors.GREEN)
+                print_colored(f"\n{symbols.WAVE} Thank you for using Windows 11 System Manager!", Colors.BOLD + Colors.CYAN)
+                print_colored(f"Stay safe and keep your system optimized! {symbols.SHIELD}", Colors.GREEN)
                 break
             else:
-                print_colored("\n❌ Invalid choice! Please enter 1-15 or 0.", Colors.RED)
+                print_colored(f"\n{symbols.CROSS} Invalid choice! Please enter 1-15 or 0.", Colors.RED)
                 input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
                 
         except KeyboardInterrupt:
-            print_colored("\n\n👋 Goodbye! Thanks for using Windows 11 Update Manager!", Colors.BOLD + Colors.CYAN)
+            print_colored(f"\n\n{symbols.WAVE} Goodbye! Thanks for using Windows 11 Update Manager!", Colors.BOLD + Colors.CYAN)
             break
         except Exception as e:
-            print_colored(f"\n❌ An error occurred: {str(e)}", Colors.RED)
+            print_colored(f"\n{symbols.CROSS} An error occurred: {str(e)}", Colors.RED)
             input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
 
 if __name__ == "__main__":

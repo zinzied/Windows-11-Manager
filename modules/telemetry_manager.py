@@ -13,45 +13,12 @@ import winreg
 import os
 import sys
 from pathlib import Path
+import ctypes
 
-# Color codes for terminal output
-class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
-
-def print_colored(text, color=Colors.WHITE):
-    """Print text with color."""
-    print(f"{color}{text}{Colors.END}")
-
-def print_header(title):
-    """Print a section header."""
-    print_colored(f"\n{'=' * 60}", Colors.CYAN)
-    print_colored(f"🔒 {title}", Colors.BOLD + Colors.CYAN)
-    print_colored(f"{'=' * 60}", Colors.CYAN)
-
-def print_success(message):
-    """Print success message."""
-    print_colored(f"✅ {message}", Colors.GREEN)
-
-def print_error(message):
-    """Print error message."""
-    print_colored(f"❌ {message}", Colors.RED)
-
-def print_warning(message):
-    """Print warning message."""
-    print_colored(f"⚠️  {message}", Colors.YELLOW)
-
-def print_info(message):
-    """Print info message."""
-    print_colored(f"ℹ️  {message}", Colors.BLUE)
+try:
+    from console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
+except ImportError:
+    from modules.console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
 
 def run_command(command, description):
     """Run a command and handle errors."""
@@ -66,7 +33,7 @@ def run_command(command, description):
 
 def disable_telemetry_services():
     """Disable telemetry and diagnostic services."""
-    print_header("Disabling Telemetry Services")
+    print_colored(f"\n{symbols.SHIELD} Disabling Telemetry Services", Colors.BOLD + Colors.CYAN)
     
     services = [
         "DiagTrack",  # Connected User Experiences and Telemetry
@@ -83,7 +50,7 @@ def disable_telemetry_services():
 
 def disable_telemetry_registry():
     """Modify registry to disable telemetry."""
-    print_header("Disabling Telemetry via Registry")
+    print_colored(f"\n{symbols.TOOLS} Disabling Telemetry via Registry", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -133,7 +100,7 @@ def disable_telemetry_registry():
 
 def disable_advertising_id():
     """Disable Windows advertising ID."""
-    print_header("Disabling Advertising ID")
+    print_colored(f"\n{symbols.BLOCK} Disabling Advertising ID", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -166,7 +133,7 @@ def disable_advertising_id():
 
 def disable_location_tracking():
     """Disable location tracking."""
-    print_header("Disabling Location Tracking")
+    print_colored(f"\n{symbols.GLOBE} Disabling Location Tracking", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -201,7 +168,7 @@ def disable_location_tracking():
 
 def disable_activity_history():
     """Disable activity history and timeline."""
-    print_header("Disabling Activity History")
+    print_colored(f"\n{symbols.TRASH} Disabling Activity History", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -229,7 +196,7 @@ def disable_activity_history():
 
 def disable_feedback_notifications():
     """Disable Windows feedback notifications."""
-    print_header("Disabling Feedback Notifications")
+    print_colored(f"\n{symbols.BLOCK} Disabling Feedback Notifications", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -263,7 +230,7 @@ def disable_feedback_notifications():
 
 def disable_telemetry_tasks():
     """Disable telemetry scheduled tasks."""
-    print_header("Disabling Telemetry Scheduled Tasks")
+    print_colored(f"\n{symbols.GEAR} Disabling Telemetry Scheduled Tasks", Colors.BOLD + Colors.CYAN)
     
     tasks = [
         r"\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser",
@@ -283,7 +250,7 @@ def disable_telemetry_tasks():
 def disable_all_telemetry():
     """Disable all telemetry and privacy invasive features."""
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
-    print_colored("🔒 COMPREHENSIVE TELEMETRY & PRIVACY DISABLE", Colors.BOLD + Colors.MAGENTA)
+    print_colored(f"{symbols.SHIELD} COMPREHENSIVE TELEMETRY & PRIVACY DISABLE", Colors.BOLD + Colors.MAGENTA)
     print_colored("=" * 70, Colors.MAGENTA)
     
     print_warning("This will disable Windows telemetry and enhance privacy!")
@@ -312,46 +279,45 @@ def disable_all_telemetry():
 
 def show_telemetry_menu():
     """Display telemetry management menu."""
-    print_colored("\n" + "=" * 60, Colors.CYAN)
-    print_colored("🔒 TELEMETRY & PRIVACY MANAGEMENT", Colors.BOLD + Colors.CYAN)
-    print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
-    print_colored("\n1. 🚫 Disable All Telemetry & Enhance Privacy", Colors.RED)
-    print_colored("2. 📊 Disable Telemetry Services Only", Colors.YELLOW)
-    print_colored("3. 📝 Disable Advertising ID Only", Colors.YELLOW)
-    print_colored("4. 📍 Disable Location Tracking Only", Colors.YELLOW)
-    print_colored("5. 📈 Check Telemetry Status", Colors.BLUE)
-    print_colored("6. 🔙 Return to Main Menu", Colors.CYAN)
+    clear_screen()
+    print_header("TELEMETRY & PRIVACY MANAGEMENT")
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.SHIELD} Disable All Telemetry & Enhance Privacy", Colors.RED)
+    print_colored(f"2. {symbols.GEAR} Disable Telemetry Services Only", Colors.YELLOW)
+    print_colored(f"3. {symbols.BLOCK} Disable Advertising ID Only", Colors.YELLOW)
+    print_colored(f"4. {symbols.GLOBE} Disable Location Tracking Only", Colors.YELLOW)
+    print_colored(f"5. {symbols.INFO} Check Telemetry Status", Colors.BLUE)
+    print_colored(f"6. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def check_telemetry_status():
     """Check current telemetry status."""
-    print_header("Checking Telemetry Status")
+    print_colored(f"\n{symbols.INFO} Checking Telemetry Status", Colors.BOLD + Colors.CYAN)
     
     # Check DiagTrack service
     try:
         result = subprocess.run('sc query "DiagTrack"', shell=True, capture_output=True, text=True)
         if "RUNNING" in result.stdout:
-            print_colored("DiagTrack Service: RUNNING (Telemetry Active)", Colors.RED)
+            print_colored(f"{symbols.WARNING} DiagTrack Service: RUNNING (Telemetry Active)", Colors.RED)
         elif "STOPPED" in result.stdout:
-            print_colored("DiagTrack Service: STOPPED (Telemetry Disabled)", Colors.GREEN)
+            print_colored(f"{symbols.CHECK} DiagTrack Service: STOPPED (Telemetry Disabled)", Colors.GREEN)
         else:
-            print_colored("DiagTrack Service: UNKNOWN", Colors.YELLOW)
+            print_colored(f"{symbols.INFO} DiagTrack Service: UNKNOWN", Colors.YELLOW)
     except:
-        print_colored("DiagTrack Service: ERROR CHECKING", Colors.YELLOW)
+        print_colored(f"{symbols.CROSS} DiagTrack Service: ERROR CHECKING", Colors.YELLOW)
     
     # Check telemetry registry
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Policies\Microsoft\Windows\DataCollection")
         value, _ = winreg.QueryValueEx(key, "AllowTelemetry")
         if value == 0:
-            print_colored("Telemetry Registry: DISABLED", Colors.GREEN)
+            print_colored(f"{symbols.CHECK} Telemetry Registry: DISABLED", Colors.GREEN)
         else:
-            print_colored("Telemetry Registry: ENABLED", Colors.RED)
+            print_colored(f"{symbols.WARNING} Telemetry Registry: ENABLED", Colors.RED)
         winreg.CloseKey(key)
     except FileNotFoundError:
-        print_colored("Telemetry Registry: DEFAULT (Enabled)", Colors.RED)
+        print_colored(f"{symbols.WARNING} Telemetry Registry: DEFAULT (Enabled)", Colors.RED)
     except Exception as e:
-        print_colored(f"Telemetry Registry: ERROR - {str(e)}", Colors.YELLOW)
+        print_colored(f"{symbols.CROSS} Telemetry Registry: ERROR - {str(e)}", Colors.YELLOW)
 
 def main():
     """Main telemetry management function."""
@@ -387,4 +353,6 @@ def main():
             input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
 
 if __name__ == "__main__":
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        print_warning("Not running as Administrator. Some features may fail.")
     main()

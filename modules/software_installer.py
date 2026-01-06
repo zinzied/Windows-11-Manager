@@ -108,12 +108,12 @@ def show_main_menu():
             print_info("Please update Windows App Installer from Microsoft Store.")
             return
 
-        print_colored("\n📋 Select Category:", Colors.BOLD + Colors.CYAN)
-        print_colored("\n1. 🌐 Browsers (Chrome, Firefox...)", Colors.GREEN)
+        print_colored(f"\n{symbols.TARGET} Select Category:", Colors.BOLD + Colors.CYAN)
+        print_colored(f"\n1. {symbols.GLOBE} Browsers (Chrome, Firefox...)", Colors.GREEN)
         print_colored(f"2. {symbols.CLOUD} Media & Social (VLC, Discord...)", Colors.MAGENTA)
         print_colored(f"3. {symbols.GEAR} Development (VS Code, Python...)", Colors.YELLOW)
         print_colored(f"4. {symbols.TOOLS} Tools & Utilities (7-Zip, PowerToys...)", Colors.BLUE)
-        print_colored("5. 🔙 Return to Main Menu", Colors.CYAN)
+        print_colored(f"5. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
         try:
             choice = input(f"\n{Colors.BOLD}Enter your choice (1-5): {Colors.END}").strip()

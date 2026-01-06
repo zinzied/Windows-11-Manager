@@ -97,11 +97,11 @@ def show_menu():
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored(f"{symbols.GEAR}  CONTEXT MENU MANAGER", Colors.BOLD + Colors.CYAN)
     print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
-    print_colored(f"\n1. 💻 Enable Classic Context Menu (Win 10)", Colors.GREEN)
-    print_colored("2. 🎨 Restore Modern Context Menu (Win 11)", Colors.BLUE)
-    print_colored("3. 🔍 Check Current Status", Colors.YELLOW)
-    print_colored("4. 🔙 Return to Main Menu", Colors.CYAN)
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.CHECK} Enable Classic Context Menu (Win 10)", Colors.GREEN)
+    print_colored(f"2. {symbols.RECYCLE} Restore Modern Context Menu (Win 11)", Colors.BLUE)
+    print_colored(f"3. {symbols.INFO} Check Current Status", Colors.YELLOW)
+    print_colored(f"4. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def main():
     while True:

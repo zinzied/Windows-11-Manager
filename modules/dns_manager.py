@@ -80,12 +80,12 @@ def check_current_dns():
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         if result.returncode == 0:
             dns_servers = result.stdout.strip().split('\n')
-            if dns_servers and dns_servers[0]:
-                for dns in dns_servers:
-                    if dns.strip():
-                        print_colored(f"  • {dns.strip()}", Colors.YELLOW)
-            else:
-                print_colored("  • Automatic (DHCP) / Unknown", Colors.WHITE)
+                if dns_servers and dns_servers[0]:
+                    for dns in dns_servers:
+                        if dns.strip():
+                            print_colored(f"  {symbols.BULLET} {dns.strip()}", Colors.YELLOW)
+                else:
+                    print_colored(f"  {symbols.BULLET} Automatic (DHCP) / Unknown", Colors.WHITE)
         else:
             # Fallback to netsh
             os.system(f'netsh interface ip show dns "{adapter}"')
@@ -97,17 +97,17 @@ def show_menu():
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored(f"{symbols.CLOUD}  DNS SWITCHER", Colors.BOLD + Colors.CYAN)
     print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose a DNS Provider:", Colors.BOLD + Colors.CYAN)
-    print_colored(f"\n1. 🔍 Google DNS (8.8.8.8)", Colors.GREEN)
-    print_colored("   └─ Fast, reliable, standard choice", Colors.WHITE)
+    print_colored(f"\n{symbols.TARGET} Choose a DNS Provider:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.GLOBE} Google DNS (8.8.8.8)", Colors.GREEN)
+    print_colored("   - Fast, reliable, standard choice", Colors.WHITE)
     print_colored(f"2. {symbols.CLOUD}  Cloudflare DNS (1.1.1.1)", Colors.MAGENTA)
-    print_colored("   └─ Focused on privacy and speed", Colors.WHITE)
+    print_colored("   - Focused on privacy and speed", Colors.WHITE)
     print_colored(f"3. {symbols.SHIELD}  OpenDNS (208.67.222.222)", Colors.YELLOW)
-    print_colored("   └─ Good for phishing protection", Colors.WHITE)
+    print_colored("   - Good for phishing protection", Colors.WHITE)
     print_colored(f"4. {symbols.RECYCLE} Reset to Automatic (DHCP)", Colors.BLUE)
-    print_colored("   └─ Use your ISP's default DNS", Colors.WHITE)
+    print_colored("   - Use your ISP's default DNS", Colors.WHITE)
     print_colored(f"5. {symbols.INFO} Check Current DNS", Colors.CYAN)
-    print_colored("6. 🔙 Return to Main Menu", Colors.CYAN)
+    print_colored(f"6. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def main():
     while True:

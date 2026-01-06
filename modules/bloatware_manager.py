@@ -13,45 +13,12 @@ import winreg
 import os
 import sys
 from pathlib import Path
+import ctypes
 
-# Color codes for terminal output
-class Colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
-
-def print_colored(text, color=Colors.WHITE):
-    """Print text with color."""
-    print(f"{color}{text}{Colors.END}")
-
-def print_header(title):
-    """Print a section header."""
-    print_colored(f"\n{'=' * 60}", Colors.CYAN)
-    print_colored(f"🗑️  {title}", Colors.BOLD + Colors.CYAN)
-    print_colored(f"{'=' * 60}", Colors.CYAN)
-
-def print_success(message):
-    """Print success message."""
-    print_colored(f"✅ {message}", Colors.GREEN)
-
-def print_error(message):
-    """Print error message."""
-    print_colored(f"❌ {message}", Colors.RED)
-
-def print_warning(message):
-    """Print warning message."""
-    print_colored(f"⚠️  {message}", Colors.YELLOW)
-
-def print_info(message):
-    """Print info message."""
-    print_colored(f"ℹ️  {message}", Colors.BLUE)
+try:
+    from console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
+except ImportError:
+    from modules.console_utils import Colors, matches as symbols, print_colored, print_header, print_success, print_error, print_warning, print_info, clear_screen
 
 def run_powershell_command(command, description):
     """Run a PowerShell command and handle errors."""
@@ -71,7 +38,7 @@ def run_powershell_command(command, description):
 
 def remove_windows_apps():
     """Remove Windows 11 bloatware apps."""
-    print_header("Removing Windows 11 Bloatware Apps")
+    print_colored(f"\n{symbols.TRASH} Removing Windows 11 Bloatware Apps", Colors.BOLD + Colors.CYAN)
     
     # List of apps to remove (safe to remove)
     apps_to_remove = [
@@ -122,7 +89,7 @@ def remove_windows_apps():
 
 def remove_xbox_services():
     """Remove Xbox-related services and features."""
-    print_header("Disabling Xbox Services")
+    print_colored(f"\n{symbols.CROSS} Disabling Xbox Services", Colors.BOLD + Colors.CYAN)
     
     xbox_services = [
         "XblAuthManager",  # Xbox Live Auth Manager
@@ -141,7 +108,7 @@ def remove_xbox_services():
 
 def disable_cortana():
     """Disable Cortana."""
-    print_header("Disabling Cortana")
+    print_colored(f"\n{symbols.CROSS} Disabling Cortana", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -177,7 +144,7 @@ def disable_cortana():
 
 def disable_windows_widgets():
     """Disable Windows 11 widgets."""
-    print_header("Disabling Windows 11 Widgets")
+    print_colored(f"\n{symbols.CROSS} Disabling Windows 11 Widgets", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -210,7 +177,7 @@ def disable_windows_widgets():
 
 def disable_edge_integration():
     """Disable Microsoft Edge integration features."""
-    print_header("Disabling Microsoft Edge Integration")
+    print_colored(f"\n{symbols.CROSS} Disabling Microsoft Edge Integration", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -245,7 +212,7 @@ def disable_edge_integration():
 
 def remove_start_menu_suggestions():
     """Remove Start Menu suggestions and ads."""
-    print_header("Removing Start Menu Suggestions")
+    print_colored(f"\n{symbols.CROSS} Removing Start Menu Suggestions", Colors.BOLD + Colors.CYAN)
     
     registry_changes = [
         {
@@ -284,7 +251,7 @@ def remove_start_menu_suggestions():
 def remove_all_bloatware():
     """Remove all bloatware and unnecessary features."""
     print_colored("\n" + "=" * 70, Colors.MAGENTA)
-    print_colored("🗑️  COMPREHENSIVE BLOATWARE REMOVAL", Colors.BOLD + Colors.MAGENTA)
+    print_colored(f"{symbols.TRASH} COMPREHENSIVE BLOATWARE REMOVAL", Colors.BOLD + Colors.MAGENTA)
     print_colored("=" * 70, Colors.MAGENTA)
     
     print_warning("This will remove Windows 11 bloatware and unnecessary features!")
@@ -313,22 +280,21 @@ def remove_all_bloatware():
 
 def show_bloatware_menu():
     """Display bloatware management menu."""
-    print_colored("\n" + "=" * 60, Colors.CYAN)
-    print_colored("🗑️  BLOATWARE REMOVAL MANAGEMENT", Colors.BOLD + Colors.CYAN)
-    print_colored("=" * 60, Colors.CYAN)
-    print_colored("\n📋 Choose an option:", Colors.BOLD + Colors.CYAN)
-    print_colored("\n1. 🗑️  Remove All Bloatware", Colors.RED)
-    print_colored("2. 📱 Remove Windows Apps Only", Colors.YELLOW)
-    print_colored("3. 🎮 Disable Xbox Services Only", Colors.YELLOW)
-    print_colored("4. 🔍 Disable Cortana Only", Colors.YELLOW)
-    print_colored("5. 📰 Disable Widgets Only", Colors.YELLOW)
-    print_colored("6. 🌐 Disable Edge Integration Only", Colors.YELLOW)
-    print_colored("7. 📊 Check Installed Apps", Colors.BLUE)
-    print_colored("8. 🔙 Return to Main Menu", Colors.CYAN)
+    clear_screen()
+    print_header("BLOATWARE REMOVAL MANAGEMENT")
+    print_colored(f"\n{symbols.TARGET} Choose an option:", Colors.BOLD + Colors.CYAN)
+    print_colored(f"\n1. {symbols.TRASH} Remove All Bloatware", Colors.RED)
+    print_colored(f"2. {symbols.TRASH} Remove Windows Apps Only", Colors.YELLOW)
+    print_colored(f"3. {symbols.CROSS} Disable Xbox Services Only", Colors.YELLOW)
+    print_colored(f"4. {symbols.CROSS} Disable Cortana Only", Colors.YELLOW)
+    print_colored(f"5. {symbols.CROSS} Disable Widgets Only", Colors.YELLOW)
+    print_colored(f"6. {symbols.CROSS} Disable Edge Integration Only", Colors.YELLOW)
+    print_colored(f"7. {symbols.INFO} Check Installed Apps", Colors.BLUE)
+    print_colored(f"8. {symbols.WAVE} Return to Main Menu", Colors.CYAN)
 
 def check_installed_apps():
     """Check currently installed Windows apps."""
-    print_header("Checking Installed Windows Apps")
+    print_colored(f"\n{symbols.INFO} Checking Installed Windows Apps", Colors.BOLD + Colors.CYAN)
     
     try:
         command = "Get-AppxPackage | Select-Object Name, Version | Sort-Object Name"
@@ -385,4 +351,6 @@ def main():
             input(f"\n{Colors.CYAN}Press Enter to continue...{Colors.END}")
 
 if __name__ == "__main__":
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        print_warning("Not running as Administrator. Some features may fail.")
     main()
